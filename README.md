@@ -40,7 +40,7 @@ npm run lint
 ### Rules
 
 1. When clarifying rules, I found that **Dealer also gets 2 cards at the start**, one of them is face down, which makes sense for me, as Player cannot guess what score Dealer has.
-2. After deal, there is small possibility that **Player gets 2 aces, and busts immediatelly** I did not know how exactly how to handle that case. I make Dealer to check his card in that case, if he also has 2 aces, game result is BUST. Not sure if that is correct.
+2. After initial deal, there is small possibility that **Player gets 2 aces, and busts immediatelly**
 3. If you select Cancel in Result dialog, you need to refresh page in case you want to play again.
 
 ### Other Details
