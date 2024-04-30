@@ -9,19 +9,19 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 export default defineConfig({
   plugins: [
     vue({
-      template: {
-        compilerOptions: {
-          isCustomElement: (tag) =>
-            [
-              'q-btn',
-              'q-avatar',
-              'q-card-section',
-              'q-card-actions',
-              'q-card',
-              'q-dialog'
-            ].includes(tag)
-        }
-      }
+      // template: {
+      //   compilerOptions: {
+      //     isCustomElement: (tag) =>
+      //       [
+      //         'q-btn',
+      //         'q-avatar',
+      //         'q-card-section',
+      //         'q-card-actions',
+      //         'q-card',
+      //         'q-dialog'
+      //       ].includes(tag)
+      //   }
+      // }
     }),
     vueJsx(),
     VueDevTools()

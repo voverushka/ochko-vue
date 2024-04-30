@@ -1,20 +1,13 @@
 import { expect, test, describe } from 'vitest'
 import { calcPoints, deck } from '../../shared/utils'
-import { cardTypes } from '../../shared/presets'
 import cards from './mocks/mockData'
 import type { CardType, CardFace } from '@/shared/types'
 
 const {
   diamondAce,
-  heartAce,
-  clubAce,
-  spadesAce,
   spadesJack,
-  clubsJack,
-  clubsFive,
   diamondTwo,
   heartsFive,
-  heartsTwo,
   clubs4,
   clubs10,
   spadesKing,

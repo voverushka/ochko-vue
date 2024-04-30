@@ -127,7 +127,6 @@ describe('TheGame', () => {
     const playerButtons = wrapper.find('.playerButtonGroup').findAll('q-btn')
     expect(playerButtons).toHaveLength(2)
     const stand = playerButtons.at(1)
-    const hit = playerButtons.at(0)
 
     stand?.trigger('click')
     await wrapper.vm.$forceUpdate()
