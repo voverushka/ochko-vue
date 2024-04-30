@@ -1,3 +1,6 @@
+// NOTE: I selected 'set of strings' vs enums in these types
+// for simplicity reasons
+
 export type CardFace =
   | 'two'
   | 'three'
@@ -14,6 +17,12 @@ export type CardFace =
   | 'king'
 
 export type CardType = 'spade' | 'heart' | 'diamond' | 'club'
+export type Command = 'hit' | 'stand' | 'deal'
+export type GameResult = 'dealer' | 'player' | 'draw'
+
+export type Deck = Array<Card>
+
+export type JudgeFunction = (playerCards: Deck, dealerCards: Deck) => GameResult | undefined
 
 export type Card = {
   face: CardFace
@@ -27,17 +36,3 @@ export type GameState = {
   dealerCards: Deck
   winner: GameResult | undefined
 }
-
-export type Command = 'hit' | 'stand' | 'deal'
-
-export type Action = {
-  type: Command
-}
-
-export type GameResult = 'dealer' | 'player' | 'draw' | 'bust'
-
-export type Deck = Array<Card>
-
-export type Reducer<S, A> = (prevState: S, action: A) => S
-
-export type JudgeFunction = (playerCards: Deck, dealerCards: Deck) => GameResult | undefined

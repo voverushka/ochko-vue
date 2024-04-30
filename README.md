@@ -15,9 +15,8 @@ The project is setup using Vue 3 / Vite /Typescript template
 1. As I am more fluent in React at the moment, _[I implemented game also in React](git@github.com:voverushka/ochko.git)_
    Vue implementation is more 'translation' of React one (which might not be best practise). _I did not use router, Pinia, as app is too simple for this._
 2. I did not do checks for accessibility, responsiveness - that would take additional time
-3. **I did not write Playwright tests**, as considering randomness of Deck, I thought it was better to create mocks and to check flow in Vitest.
+3. **I did not write Playwright tests**, as considering randomness of Deck, I thought it was better to create mocks and to check flow in Vitest. They are not full set though.
 4. Initially I wanted to use _vue-styled-components_, (similar to styled-components in React implementation) but as it has 5 high security vulnerabilities, so I dropped idea and left 'raw styled'
-5. When running tests, currently there is warnings of type "Failed to resolve component: q-dialog" (related to Quazar). I did not resove that issue yet.
 
 **In any case, I'd like to get concrete feedback to know what I could improve next time !**
 

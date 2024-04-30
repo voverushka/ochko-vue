@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
-import { messages } from '../../shared/presets'
+import { messages } from '@/shared/presets'
 import { useHandState } from './gameState'
 import TheCard from '../TheCard.vue'
 import TheDialog from '../TheDialog.vue'

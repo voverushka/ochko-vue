@@ -3,6 +3,7 @@ import { mount } from '@vue/test-utils'
 import TheGame from '../Game/TheGame.vue'
 import TheCard from '../TheCard.vue'
 import { cards } from './mocks/mockData'
+import { messages } from '@/shared/presets'
 
 describe('TheGame', () => {
   beforeAll(() => {
@@ -27,60 +28,75 @@ describe('TheGame', () => {
   afterAll(() => {
     vi.resetAllMocks()
   })
-  it('initial deal ', async () => {
+  it('initial deal - 2 cards each, one dealers card is closed', async () => {
     const wrapper = mount(TheGame)
     await wrapper.vm.$forceUpdate()
     const areas = wrapper.findAll('.area')
     expect(areas).toHaveLength(2)
+
     // dealer area
     const dealerArea = areas.at(0)
     const dealerOpenCards = dealerArea?.findAll('.card')
     expect(dealerOpenCards).toHaveLength(1)
     const dealerClosedCards = dealerArea?.findAll('.closedCard')
     expect(dealerClosedCards).toHaveLength(1)
+
     // player area
     const playerArea = areas.at(1)
     const playerOpenCards = playerArea?.findAll('.card')
     expect(playerOpenCards).toHaveLength(2)
     const playerClosedCards = playerArea?.findAll('.closedCard')
     expect(playerClosedCards).toHaveLength(0)
+
     // Card components in total
     const cards = wrapper.findAllComponents(TheCard)
     expect(cards).toHaveLength(4)
   })
-  it('hit - play again ', async () => {
+  it('player hits, no winner, play again ', async () => {
     const wrapper = mount(TheGame)
     await wrapper.vm.$forceUpdate()
-    // now about buttons
+
+    // find hit button
     const playerButtons = wrapper.find('.playerButtonGroup').findAll('q-btn')
     expect(playerButtons).toHaveLength(2)
     const hit = playerButtons.at(0)
 
+    //... and hit
     hit?.trigger('click')
     await wrapper.vm.$forceUpdate()
 
+    // check cards after
     const areas = wrapper.findAll('.area')
     expect(areas).toHaveLength(2)
-    // dealer area
+
+    // dealer cards - one open other closed
     const dealerArea = areas.at(0)
     const dealerOpenCards = dealerArea?.findAll('.card')
     expect(dealerOpenCards).toHaveLength(1)
     const dealerClosedCards = dealerArea?.findAll('.closedCard')
     expect(dealerClosedCards).toHaveLength(1)
-    // player area
+
+    // player area - 3 cards, all open
     const playerArea = areas.at(1)
     const playerOpenCards = playerArea?.findAll('.card')
     expect(playerOpenCards).toHaveLength(3)
     const playerClosedCards = playerArea?.findAll('.closedCard')
     expect(playerClosedCards).toHaveLength(0)
-    // // Card components in total
+
+    // 5 cards in total
     const cards = wrapper.findAllComponents(TheCard)
     expect(cards).toHaveLength(5)
+
+    const dialogHTML = wrapper.find('q-dialog').html()
+    expect(dialogHTML).not.toContain(messages['dealer'])
+    expect(dialogHTML).not.toContain(messages['player'])
+    expect(dialogHTML).not.toContain(messages['draw'])
   })
-  it('stand - cancel', async () => {
+  it('player stands, no winner, cancel', async () => {
     const wrapper = mount(TheGame)
     await wrapper.vm.$forceUpdate()
-    // now about buttons
+
+    // find stand button and click it
     const playerButtons = wrapper.find('.playerButtonGroup').findAll('q-btn')
     expect(playerButtons).toHaveLength(2)
     const stand = playerButtons.at(1)
@@ -89,33 +105,39 @@ describe('TheGame', () => {
     stand?.trigger('click')
     await wrapper.vm.$forceUpdate()
 
+    // check cards
     const areas = wrapper.findAll('.area')
     expect(areas).toHaveLength(2)
-    // dealer area
+    // dealer hits, and has all cards open
     const dealerArea = areas.at(0)
     const dealerOpenCards = dealerArea?.findAll('.card')
     expect(dealerOpenCards).toHaveLength(3)
     const dealerClosedCards = dealerArea?.findAll('.closedCard')
     expect(dealerClosedCards).toHaveLength(0)
-    // player area
+
+    // player hits, and has 2 cards
     const playerArea = areas.at(1)
     const playerOpenCards = playerArea?.findAll('.card')
     expect(playerOpenCards).toHaveLength(2)
     const playerClosedCards = playerArea?.findAll('.closedCard')
     expect(playerClosedCards).toHaveLength(0)
-    // // Card components in total
+
+    // 5 cards in total
     const cards = wrapper.findAllComponents(TheCard)
     expect(cards).toHaveLength(5)
 
-    const dialogButtons = wrapper.find('q-dialog').findAll('q-btn')
+    // dialog is displayed, find cancel and press it
+    const dialog = wrapper.find('q-dialog')
+    const dialogButtons = dialog.findAll('q-btn')
     expect(dialogButtons).toHaveLength(2)
+
+    expect(dialog.html()).toContain(messages['dealer'])
 
     const cancel = dialogButtons.at(0)
 
     cancel?.trigger('click')
 
-    await wrapper.vm.$forceUpdate()
-
+    // game is over, buttons disabled
     expect(stand?.attributes('disabled')).toBeTruthy()
     expect(hit?.attributes('disabled')).toBeTruthy()
   })
@@ -133,19 +155,19 @@ describe('TheGame', () => {
 
     const areas = wrapper.findAll('.area')
     expect(areas).toHaveLength(2)
-    // dealer area
+    // dealer cards
     const dealerArea = areas.at(0)
     const dealerOpenCards = dealerArea?.findAll('.card')
     expect(dealerOpenCards).toHaveLength(3)
     const dealerClosedCards = dealerArea?.findAll('.closedCard')
     expect(dealerClosedCards).toHaveLength(0)
-    // player area
+    // player cards
     const playerArea = areas.at(1)
     const playerOpenCards = playerArea?.findAll('.card')
     expect(playerOpenCards).toHaveLength(2)
     const playerClosedCards = playerArea?.findAll('.closedCard')
     expect(playerClosedCards).toHaveLength(0)
-    // // Card components in total
+    //Card components in total
     const cards = wrapper.findAllComponents(TheCard)
     expect(cards).toHaveLength(5)
 
@@ -158,7 +180,7 @@ describe('TheGame', () => {
 
     await wrapper.vm.$forceUpdate()
 
-    // we are athe the start, deal done again
+    // WE START GAME AGAIN
     expect(wrapper.findAllComponents(TheCard)).toHaveLength(4)
   })
 })

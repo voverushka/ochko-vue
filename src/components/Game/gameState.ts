@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import cloneDeep from 'lodash.clonedeep'
-import type { GameState, JudgeFunction, Command, Deck, GameResult } from '../../shared/types'
-import { shuffle, calcPoints, deck } from '../../shared/utils'
-import { dealerLimit, winningPoints } from '../../shared/presets'
+import type { GameState, JudgeFunction, Command, Deck, GameResult } from '@/shared/types'
+import { shuffle, calcPoints, deck } from '@/shared/utils'
+import { dealerLimit, winningPoints } from '@/shared/presets'
 
 export const getInitialState = (): GameState => {
   const initialGameState: GameState = {
@@ -17,22 +17,13 @@ export const getInitialState = (): GameState => {
 export const isBust = (points: number) => points > winningPoints
 
 export const Judge: Record<Command, JudgeFunction> = {
-  deal: (playerCards: Deck, dealerCards: Deck): GameResult | undefined => {
-    // both could get 2 aces
-    const dealerPoints = calcPoints(dealerCards)
-    const playerPoints = calcPoints(playerCards)
-    const isBustPlayer = isBust(playerPoints)
-    const isBustDealer = isBust(dealerPoints)
-    if (!isBustPlayer && !isBustDealer) {
-      return undefined // play futher
-    }
-    // both has 2 aces
-    return isBustPlayer && isBustDealer ? 'bust' : isBustDealer ? 'player' : 'dealer'
+  deal: (playerCards: Deck): GameResult | undefined => {
+    // TODO: not sure if I implement initial bust case correctly
+    return isBust(calcPoints(playerCards)) ? 'dealer' : undefined
   },
 
   hit: (playerCards: Deck): GameResult | undefined => {
-    const inBustState = isBust(calcPoints(playerCards))
-    return inBustState ? 'dealer' : undefined
+    return isBust(calcPoints(playerCards)) ? 'dealer' : undefined
   },
 
   stand: (playerCards: Deck, dealerCards: Deck): GameResult => {
@@ -53,6 +44,11 @@ export const Dealer = {
   deal: () => {
     const newState: GameState = getInitialState()
     newState.deck = shuffle(newState.deck)
+    if (newState.deck.length < 4) {
+      // not possinbe case now, but just in case - sanity check
+      console.error('Deal is called with not full deck')
+      return newState
+    }
     newState.playerCards = [newState.deck.pop()!, newState.deck.pop()!]
     newState.dealerCards = [newState.deck.pop()!, newState.deck.pop()!]
     newState.dealerCards[1].closed = true

@@ -7,25 +7,7 @@ import VueDevTools from 'vite-plugin-vue-devtools'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    vue({
-      // template: {
-      //   compilerOptions: {
-      //     isCustomElement: (tag) =>
-      //       [
-      //         'q-btn',
-      //         'q-avatar',
-      //         'q-card-section',
-      //         'q-card-actions',
-      //         'q-card',
-      //         'q-dialog'
-      //       ].includes(tag)
-      //   }
-      // }
-    }),
-    vueJsx(),
-    VueDevTools()
-  ],
+  plugins: [vue(), vueJsx(), VueDevTools()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

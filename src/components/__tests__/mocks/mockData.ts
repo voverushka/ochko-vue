@@ -1,4 +1,4 @@
-import type { CardType, CardFace } from '../../../shared/types'
+import type { CardType, CardFace } from '@/shared/types'
 
 const diamondAce = {
   face: 'ace' as CardFace,

@@ -1,7 +1,7 @@
 import { expect, test, describe } from 'vitest'
 import { Judge, Dealer, getInitialState } from '../Game/gameState'
 import cards from './mocks/mockData'
-import { cardsInDeck } from '../../shared/presets'
+import { cardsInDeck } from '@/shared/presets'
 
 const {
   diamondAce,
@@ -19,50 +19,50 @@ const {
 } = cards
 
 describe('Judge tests', () => {
-  test('deal - both BUST', () => {
+  test('deal - player BUST', () => {
     const runRulesResult = Judge['deal']([diamondAce, heartAce], [clubAce, spadesAce])
-    expect(runRulesResult).toBe('bust')
+    expect(runRulesResult).toBe('dealer')
   }),
-    test('player HIT, all ok', () => {
+    test('player HIT, winner undefined', () => {
       const runRulesResult = Judge['hit']([diamondAce, spadesJack], [clubAce, spadesAce])
       expect(runRulesResult).toBeUndefined()
     }),
-    test('player HIT and BUST', () => {
+    test('player HITS and BUSTS', () => {
       const runRulesResult = Judge['hit'](
         [heartAce, spadesJack, clubsFive],
         [diamondAce, clubsJack, spadesJack]
       )
       expect(runRulesResult).toEqual('dealer')
     }),
-    test('dealer STAND, player WINS', () => {
+    test('dealer STANDS, player WINS', () => {
       const runRulesResult = Judge['stand'](
         [heartAce, clubsFive, diamondTwo],
         [diamondAce, spadesJack, clubsJack]
       )
       expect(runRulesResult).toEqual('player')
     }),
-    test('dealer HITS, dealer WINS', () => {
+    test('dealer HITS after STAND, dealer WINS', () => {
       const runRulesResult = Judge['stand'](
         [heartAce, clubsFive, diamondTwo],
         [diamondAce, spadesJack]
       )
       expect(runRulesResult).toEqual('dealer')
     }),
-    test('dealer hits after STAND, a DRAW', () => {
+    test('dealer HITS after STAND, a DRAW', () => {
       const runRulesResult = Judge['stand'](
         [heartAce, clubsFive, diamondTwo],
         [clubAce, heartsFive, heartsTwo]
       )
       expect(runRulesResult).toEqual('draw')
     }),
-    test('dealer hits afyer STAND, player wins', () => {
+    test('dealer HITS after STAND, player WINS', () => {
       const runRulesResult = Judge['stand'](
         [diamondAce, clubsFive, diamondTwo],
         [spadesAce, clubs4, heartsTwo]
       )
       expect(runRulesResult).toEqual('player')
     })
-  test('a DRAW from the start (stand)', () => {
+  test('player STANDS at initial deal, a DRAW', () => {
     const runRulesResult = Judge['stand']([spadesAce, clubs10], [spadesAce, clubs10])
     expect(runRulesResult).toEqual('draw')
   })
@@ -83,7 +83,7 @@ describe('getInitialState state tests', () => {
   })
 })
 
-describe('Dealer tests', () => {
+describe('DEALER tests', () => {
   test('deal - cards distribted correctly', () => {
     const initialState = getInitialState() // checks done above
     const stateAfterDealer = Dealer['deal']()

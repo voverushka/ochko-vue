@@ -1,5 +1,5 @@
-import { expect, test, describe } from 'vitest'
-import { calcPoints, deck } from '../../shared/utils'
+import { expect, test, describe, vi } from 'vitest'
+import { calcPoints, deck, shuffle } from '@/shared/utils'
 import cards from './mocks/mockData'
 import type { CardType, CardFace } from '@/shared/types'
 
@@ -72,4 +72,13 @@ describe('getDeck', () => {
     )
     expect(Object.values(countsOfFace).every((value) => value === 4)).toBeTruthy()
   })
+})
+
+test('shuffle test', () => {
+  vi.spyOn(Math, 'random').mockImplementation(() => 0.2)
+  const initialDeck = deck.getInitialDeck()
+  const finalDeck = shuffle(initialDeck)
+  expect(finalDeck).toEqual(initialDeck.reverse())
+  expect(finalDeck === initialDeck).toBeFalsy() // object refs
+  vi.resetAllMocks()
 })

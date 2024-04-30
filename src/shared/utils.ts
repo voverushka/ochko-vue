@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash.clonedeep'
 import { cardFaceSettings, cardTypes } from './presets'
 import type { Deck, CardFace, CardType } from './types'
 
@@ -20,7 +21,7 @@ const deckInit = (): { getInitialDeck: () => Deck } => {
 export const deck = deckInit()
 
 export const shuffle = (cards: Deck) => {
-  const shuffled = [...cards]
+  const shuffled = cloneDeep(cards)
   shuffled.sort(() => Math.random() - 0.5)
   return shuffled
 }

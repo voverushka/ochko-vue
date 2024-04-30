@@ -28,7 +28,6 @@ export const cardsInDeck = 52
 
 export const messages: Record<GameResult, string> = {
   draw: 'Game ended with DRAW.',
-  bust: 'Initial BUST. Shuffle cards better.',
   player: 'The winner is PLAYER',
   dealer: 'The winner is DEALER'
 }
