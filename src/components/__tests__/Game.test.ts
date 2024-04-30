@@ -26,7 +26,7 @@ describe('TheGame', () => {
     })
   })
   afterAll(() => {
-    vi.resetAllMocks()
+    vi.clearAllMocks()
   })
   it('initial deal - 2 cards each, one dealers card is closed', async () => {
     const wrapper = mount(TheGame)
