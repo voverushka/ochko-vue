@@ -1,5 +1,5 @@
 import { expect, test, describe } from 'vitest'
-import { Judge, Dealer, getInitialState } from '../../shared/gameState'
+import { Judge, Dealer, getInitialState } from '../Game/gameState'
 import cards from './mocks/mockData'
 import { cardsInDeck } from '../../shared/presets'
 

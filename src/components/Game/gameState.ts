@@ -1,8 +1,8 @@
 import { ref } from 'vue'
 import cloneDeep from 'lodash.clonedeep'
-import type { GameState, JudgeFunction, Command, Deck, GameResult } from './types'
-import { shuffle, calcPoints, deck } from './utils'
-import { dealerLimit, winningPoints } from './presets'
+import type { GameState, JudgeFunction, Command, Deck, GameResult } from '../../shared/types'
+import { shuffle, calcPoints, deck } from '../../shared/utils'
+import { dealerLimit, winningPoints } from '../../shared/presets'
 
 export const getInitialState = (): GameState => {
   const initialGameState: GameState = {
@@ -18,7 +18,7 @@ export const isBust = (points: number) => points > winningPoints
 
 export const Judge: Record<Command, JudgeFunction> = {
   deal: (playerCards: Deck, dealerCards: Deck): GameResult | undefined => {
-    // both could get 2 ace
+    // both could get 2 aces
     const dealerPoints = calcPoints(dealerCards)
     const playerPoints = calcPoints(playerCards)
     const isBustPlayer = isBust(playerPoints)

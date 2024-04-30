@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import type { Card as CardDef } from '../shared/types'
+import { h } from 'vue'
+import type { Card as CardDef, CardType } from '../shared/types'
 import { cardFaceSettings } from '../shared/presets'
 
+const iconStyles = {
+  marginRight: '5px',
+  fontSize: '30px'
+}
+const CardTypeIndicator: Record<CardType, any> = {
+  spade: h('i', { style: iconStyles, innerHTML: '&spades;' }),
+  heart: h('i', { style: { ...iconStyles, color: 'red' }, innerHTML: '&hearts;' }),
+  diamond: h('i', { style: { ...iconStyles, color: 'red' }, innerHTML: '&diams;' }),
+  club: h('i', { style: iconStyles, innerHTML: '&clubs;' })
+}
 const props = defineProps<CardDef>()
 const [value, indicator] = cardFaceSettings[props.face]
 </script>
@@ -11,13 +22,7 @@ const [value, indicator] = cardFaceSettings[props.face]
       <span class="valueIndicator">{{ value }}</span>
     </p>
     <span class="indicator">
-      <span :style="{ marginRight: '5px' }">
-        <!-- TODO: dynamic component or slot-->
-        <i class="icon" v-if="props.type === 'spade'">&spades;</i>
-        <i class="icon" v-if="props.type === 'heart'" :style="{ color: 'red' }">&hearts;</i>
-        <i class="icon" v-if="props.type === 'diamond'" :style="{ color: 'red' }">&diams;</i>
-        <i class="icon" v-if="props.type === 'club'">&clubs;</i>
-      </span>
+      <component :is="CardTypeIndicator[props.type]" />
       <span>{{ indicator }}</span>
     </span>
   </li>
@@ -43,9 +48,13 @@ const [value, indicator] = cardFaceSettings[props.face]
 }
 .indicator {
   position: absolute;
-  top: -10px;
+  top: -5px;
   left: 5px;
   font-size: 23px;
+  i {
+    font-size: 30px;
+    margin-right: 5px;
+  }
 }
 .cardValue {
   font-size: 40px;
@@ -85,9 +94,5 @@ const [value, indicator] = cardFaceSettings[props.face]
   box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
   -webkit-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-}
-.icon {
-  font-style: normal;
-  font-size: 30px;
 }
 </style>

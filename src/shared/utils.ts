@@ -31,3 +31,9 @@ export const calcPoints = (cards: Deck) => {
     return acc + points
   }, 0)
 }
+
+export default {
+  deck,
+  shuffle,
+  calcPoints
+}

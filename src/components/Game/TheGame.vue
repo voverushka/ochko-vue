@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 
-import { messages } from '../shared/presets'
-import { useHandState } from '../shared/gameState'
-import TheCard from './TheCard.vue'
-import TheDialog from './TheDialog.vue'
+import { messages } from '../../shared/presets'
+import { useHandState } from './gameState'
+import TheCard from '../TheCard.vue'
+import TheDialog from '../TheDialog.vue'
 
 const { handState, issueCommand } = useHandState()
 
@@ -44,7 +44,6 @@ const handOver = computed(() => handState.value.winner !== undefined)
       </ul>
       <div class="playerButtonGroup">
         <q-btn
-          do_not_touch
           round
           color="positive"
           icon="front_hand"
@@ -131,3 +130,4 @@ const handOver = computed(() => handState.value.winner !== undefined)
   height: 10px;
 }
 </style>
+./gameState
