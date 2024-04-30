@@ -80,5 +80,5 @@ test('shuffle test', () => {
   const finalDeck = shuffle(initialDeck)
   expect(finalDeck).toEqual(initialDeck.reverse())
   expect(finalDeck === initialDeck).toBeFalsy() // object refs
-  vi.resetAllMocks()
+  vi.clearAllMocks()
 })

@@ -64,7 +64,10 @@ export const Dealer = {
   stand: (state: GameState) => {
     const newState = cloneDeep(state)
 
-    newState.dealerCards[1].closed = false
+    // sanity
+    if (newState.dealerCards.length > 1) {
+      newState.dealerCards[1].closed = false
+    }
     if (calcPoints(newState.dealerCards) <= dealerLimit) {
       const cardOut = newState.deck.pop()
       cardOut && newState.dealerCards.push(cardOut)
@@ -80,7 +83,7 @@ export const useHandState = () => {
     const newState: GameState = Dealer[command](handState.value)
     if (command in Judge) {
       newState.winner = Judge[command](newState.playerCards, newState.dealerCards)
-      if (newState.winner !== undefined) {
+      if (newState.winner !== undefined && newState.dealerCards.length > 1 /* sanity */) {
         newState.dealerCards[1].closed = false
       }
     }

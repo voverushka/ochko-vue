@@ -1,5 +1,5 @@
-import { expect, test, describe } from 'vitest'
-import { Judge, Dealer, getInitialState } from '../Game/gameState'
+import { expect, test, describe, beforeEach, afterEach, vi } from 'vitest'
+import { Judge, Dealer, getInitialState, useHandState } from '../Game/gameState'
 import cards from './mocks/mockData'
 import { cardsInDeck } from '@/shared/presets'
 
@@ -119,5 +119,29 @@ describe('DEALER tests', () => {
     expect(initialState !== stateAfterDealer).toBeTruthy() // should be clone
     expect(stateAfterDealer.dealerCards.length).toEqual(2)
     expect(stateAfterDealer.playerCards.length).toEqual(2)
+  })
+})
+
+describe('useHandState tests - in isolation', () => {
+  test('deal - cards distributed correctly', () => {
+    const { handState, issueCommand } = useHandState()
+    issueCommand('deal')
+    expect(handState.value.dealerCards.length).toEqual(2)
+    expect(handState.value.playerCards.length).toEqual(2)
+    expect(handState.value.deck.length).toEqual(cardsInDeck - 4)
+  })
+  test('hit - cards distributed correctly', () => {
+    const { handState, issueCommand } = useHandState()
+    issueCommand('hit')
+    expect(handState.value.dealerCards.length).toEqual(0)
+    expect(handState.value.playerCards.length).toEqual(1)
+    expect(handState.value.deck.length).toEqual(cardsInDeck - 1)
+  })
+  test('hit - cards distributed correctly', () => {
+    const { handState, issueCommand } = useHandState()
+    issueCommand('stand')
+    expect(handState.value.dealerCards.length).toEqual(1) // he has 0 points
+    expect(handState.value.playerCards.length).toEqual(0)
+    expect(handState.value.deck.length).toEqual(cardsInDeck - 1)
   })
 })
