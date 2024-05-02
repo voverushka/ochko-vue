@@ -105,9 +105,11 @@ const handOver = computed(() => handState.value.winner !== undefined)
 }
 .container {
   padding: 20px;
-  border: 3px solid black;
   width: 100%;
   height: 100%;
+  min-height: 800px;
+  min-width: 800px;
+  overflow: auto;
 }
 .cardsList {
   list-style: none;
