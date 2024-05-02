@@ -1,4 +1,4 @@
-import { expect, test, describe, beforeEach, afterEach, vi } from 'vitest'
+import { expect, test, describe } from 'vitest'
 import { Judge, Dealer, getInitialState, useHandState } from '../Game/gameState'
 import cards from './mocks/mockData'
 import { cardsInDeck } from '@/shared/presets'
@@ -20,31 +20,38 @@ const {
 
 describe('Judge tests', () => {
   test('deal - player BUST', () => {
-    const runRulesResult = Judge['deal']([diamondAce, heartAce], [clubAce, spadesAce])
+    const runRulesResult = Judge['deal'](
+      [diamondAce, heartAce], // player cards
+      [clubAce, spadesAce]
+    )
     expect(runRulesResult).toBe('dealer')
   }),
     test('player HIT, winner undefined', () => {
-      const runRulesResult = Judge['hit']([diamondAce, spadesJack], [clubAce, spadesAce])
+      const runRulesResult = Judge['hit'](
+        [diamondAce, clubs4, clubsFive], // player cards
+        [clubAce, spadesAce]
+      )
       expect(runRulesResult).toBeUndefined()
     }),
     test('player HITS and BUSTS', () => {
       const runRulesResult = Judge['hit'](
-        [heartAce, spadesJack, clubsFive],
-        [diamondAce, clubsJack, spadesJack]
+        [heartAce, spadesJack, clubsFive], //player cards
+        [diamondAce, clubsJack]
       )
       expect(runRulesResult).toEqual('dealer')
     }),
-    test('dealer STANDS, player WINS', () => {
+    test('dealer BUSTS, player WINS', () => {
       const runRulesResult = Judge['stand'](
+        // player cards
         [heartAce, clubsFive, diamondTwo],
-        [diamondAce, spadesJack, clubsJack]
+        [diamondAce, clubs4, clubsJack]
       )
       expect(runRulesResult).toEqual('player')
     }),
     test('dealer HITS after STAND, dealer WINS', () => {
       const runRulesResult = Judge['stand'](
-        [heartAce, clubsFive, diamondTwo],
-        [diamondAce, spadesJack]
+        [clubs10, clubsFive, diamondTwo],
+        [diamondAce, clubs4, heartsFive]
       )
       expect(runRulesResult).toEqual('dealer')
     }),
