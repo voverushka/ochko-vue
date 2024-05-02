@@ -56,17 +56,24 @@ export const Dealer = {
   },
 
   hit: (state: GameState) => {
-    const newState = cloneDeep(state)
+    const newState = { ...state }
+    newState.deck = [...state.deck]
+    newState.playerCards = [...state.playerCards]
     const cardOut = newState.deck.pop()
     cardOut && newState.playerCards.push(cardOut)
     return newState
   },
   stand: (state: GameState) => {
-    const newState = cloneDeep(state)
+    const newState = { ...state }
+    newState.deck = [...state.deck]
+    newState.dealerCards = [...state.dealerCards]
 
     // sanity
     if (newState.dealerCards.length > 1) {
-      newState.dealerCards[1].closed = false
+      newState.dealerCards[1] = {
+        ...newState.dealerCards[1],
+        closed: false
+      }
     }
     if (calcPoints(newState.dealerCards) <= dealerLimit) {
       const cardOut = newState.deck.pop()
