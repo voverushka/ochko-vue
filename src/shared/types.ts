@@ -18,11 +18,11 @@ export type CardFace =
 
 export type CardType = 'spade' | 'heart' | 'diamond' | 'club'
 export type Command = 'hit' | 'stand' | 'deal'
-export type GameResult = 'dealer' | 'player' | 'draw'
+export type Winner = 'dealer' | 'player' | 'draw'
 
 export type Deck = Array<Card>
 
-export type JudgeFunction = (playerCards: Deck, dealerCards: Deck) => GameResult | undefined
+export type JudgeFunction = (playerCards: Deck, dealerCards: Deck) => GameResult
 
 export type Card = {
   face: CardFace
@@ -34,5 +34,10 @@ export type GameState = {
   deck: Deck
   playerCards: Deck
   dealerCards: Deck
-  winner: GameResult | undefined
+  winner: Winner | undefined
+}
+
+export type GameResult = {
+  playerCounts: number
+  winner: Winner | undefined
 }

@@ -1,4 +1,4 @@
-import type { CardFace, GameResult } from './types'
+import type { CardFace, Winner } from './types'
 
 type FaceMappings = [number, string]
 
@@ -26,7 +26,7 @@ export const dealerLimit = 17
 
 export const cardsInDeck = 52
 
-export const messages: Record<GameResult, string> = {
+export const messages: Record<Winner, string> = {
   draw: 'Game ended with DRAW.',
   player: 'The winner is PLAYER',
   dealer: 'The winner is DEALER'

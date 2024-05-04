@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import cloneDeep from 'lodash.clonedeep'
-import type { GameState, JudgeFunction, Command, Deck, GameResult } from '@/shared/types'
+import type { GameState, JudgeFunction, Command, Deck, Winner, GameResult } from '@/shared/types'
 import { shuffle, calcPoints, deck } from '@/shared/utils'
 import { dealerLimit, winningPoints } from '@/shared/presets'
 
@@ -17,26 +17,41 @@ export const getInitialState = (): GameState => {
 export const isBust = (points: number) => points > winningPoints
 
 export const Judge: Record<Command, JudgeFunction> = {
-  deal: (playerCards: Deck): GameResult | undefined => {
+  deal: (playerCards: Deck): GameResult => {
     // TODO: not sure if I implement initial bust case correctly
-    return isBust(calcPoints(playerCards)) ? 'dealer' : undefined
+    const playerCounts = calcPoints(playerCards)
+    const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
+    return {
+      playerCounts,
+      winner
+    }
   },
 
-  hit: (playerCards: Deck): GameResult | undefined => {
-    return isBust(calcPoints(playerCards)) ? 'dealer' : undefined
+  hit: (playerCards: Deck): GameResult => {
+    const playerCounts = calcPoints(playerCards)
+    const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
+    return {
+      playerCounts,
+      winner
+    }
   },
 
   stand: (playerCards: Deck, dealerCards: Deck): GameResult => {
     const dealerPoints = calcPoints(dealerCards)
-    const playerPoints = calcPoints(playerCards)
+    const playerCounts = calcPoints(playerCards)
 
-    if (isBust(dealerPoints)) {
-      return 'player'
+    const winner: Winner = isBust(dealerPoints)
+      ? 'player'
+      : playerCounts === dealerPoints
+        ? 'draw'
+        : winningPoints - playerCounts < winningPoints - dealerPoints
+          ? 'player'
+          : 'dealer'
+
+    return {
+      playerCounts,
+      winner
     }
-    if (playerPoints === dealerPoints) {
-      return 'draw'
-    }
-    return winningPoints - playerPoints < winningPoints - dealerPoints ? 'player' : 'dealer'
   }
 }
 
@@ -87,12 +102,13 @@ export const useHandState = () => {
   const handState = ref(getInitialState())
 
   function issueCommand(command: Command) {
-    const newState: GameState = Dealer[command](handState.value)
+    let newState: GameState = Dealer[command](handState.value)
     if (command in Judge) {
-      newState.winner = Judge[command](newState.playerCards, newState.dealerCards)
-      if (newState.winner !== undefined && newState.dealerCards.length > 1 /* sanity */) {
+      const { winner, playerCounts } = Judge[command](newState.playerCards, newState.dealerCards)
+      if (winner !== undefined && newState.dealerCards.length > 1 /* sanity */) {
         newState.dealerCards[1].closed = false
       }
+      newState = Object.assign(newState, { winner, playerCounts })
     }
     handState.value = newState
   }

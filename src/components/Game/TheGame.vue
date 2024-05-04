@@ -32,7 +32,9 @@ const handOver = computed(() => handState.value.winner !== undefined)
     </section>
     <div class="spacer" />
     <section class="area">
-      <div class="header">Player</div>
+      <div class="header">
+        Player <span class="points">( {{ handState.playerCounts }} points )</span>
+      </div>
       <ul class="cardsList">
         <the-card
           v-for="(card, index) in handState.playerCards"
@@ -128,6 +130,10 @@ const handOver = computed(() => handState.value.winner !== undefined)
 .spacer {
   width: 100%;
   height: 10px;
+}
+.points {
+  text-transform: none;
+  color: gray;
 }
 </style>
 ./gameState
