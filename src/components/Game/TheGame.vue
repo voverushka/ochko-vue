@@ -18,7 +18,7 @@ const handOver = computed(() => handState.value.winner !== undefined)
 </script>
 <template>
   <div class="container">
-    <section class="area">
+    <section class="area shadow-11">
       <div class="header">Dealer</div>
       <ul class="cardsList">
         <the-card
@@ -75,6 +75,7 @@ const handOver = computed(() => handState.value.winner !== undefined)
   width: 100%;
   height: 50%;
   min-height: 400px;
+  min-width: 800px;
   overflow: auto;
   background: #dcdcd8;
   display: flex;
@@ -82,9 +83,6 @@ const handOver = computed(() => handState.value.winner !== undefined)
   align-items: center;
   border-radius: 10px;
   justify-content: space-around;
-  box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
 }
 
 .playerButtonGroup {

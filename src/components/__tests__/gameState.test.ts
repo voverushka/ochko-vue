@@ -19,7 +19,7 @@ const {
 } = cards
 
 describe('Judge tests', () => {
-  test('deal - player BUST', () => {
+  test('deal - player in BUST', () => {
     const runRulesResult = Judge['deal'](
       [diamondAce, heartAce], // player cards
       [clubAce, spadesAce]

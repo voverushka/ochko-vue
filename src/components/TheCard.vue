@@ -17,7 +17,7 @@ const props = defineProps<CardDef>()
 const [value, indicator] = cardFaceSettings[props.face]
 </script>
 <template>
-  <li v-if="!props.closed" class="card">
+  <li v-if="!props.closed" class="card shadow-16">
     <p class="cardValue">
       <span class="valueIndicator">{{ value }}</span>
     </p>
@@ -26,30 +26,30 @@ const [value, indicator] = cardFaceSettings[props.face]
       <span>{{ indicator }}</span>
     </span>
   </li>
-  <li v-else class="closedCard" />
+  <li v-else class="closedCard shadow-16" />
 </template>
 
 <style scoped>
 .card {
   margin-top: 5px;
   margin-left: 5px;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 150px;
   height: 200px;
   min-width: 150px;
   min-height: 200px;
   background: #ffffff;
-  border: 3px solid #433939;
+  border: 3px solid #000000;
   position: relative;
   border-radius: 5px;
-  box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
 }
 .indicator {
   position: absolute;
-  top: -5px;
+  top: 0px;
   left: 5px;
+  line-height: 1;
   font-size: 23px;
   i {
     font-size: 30px;
@@ -58,10 +58,10 @@ const [value, indicator] = cardFaceSettings[props.face]
 }
 .cardValue {
   font-size: 40px;
-  margin: 66px auto;
   width: 100%;
   display: flex;
   flex-direction: column;
+  margin: 0;
 }
 .valueIndicator {
   text-align: center;
@@ -79,20 +79,16 @@ const [value, indicator] = cardFaceSettings[props.face]
   display: inline-block;
   width: 150px;
   height: 200px;
-  border: 3px solid #c7c064;
+  border: 3px solid #000000;
   position: relative;
   border-radius: 5px;
   background-image: linear-gradient(
-    #553c9a 0%,
-    #553c9a 20%,
-    #b393d3 40%,
-    #553c9a 60%,
-    #b393d3 80%,
-    #553c9a 100%
+    #9b99a0 0%,
+    #535055 20%,
+    #9b99a0 40%,
+    #535055 60%,
+    #9b99a0 80%,
+    #535055 100%
   );
-  background-size: cover;
-  box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -webkit-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
-  -moz-box-shadow: 4px 8px 14px 0px rgba(0, 0, 0, 0.75);
 }
 </style>
