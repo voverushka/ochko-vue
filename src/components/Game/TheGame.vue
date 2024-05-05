@@ -3,6 +3,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import { messages } from '@/shared/presets'
 import { useHandState } from './gameState'
+import { cardFaceSettings } from '@/shared/presets'
 import TheCard from '../TheCard.vue'
 import TheDialog from '../TheDialog.vue'
 
@@ -15,11 +16,28 @@ onMounted(() => {
   gameOver.value = false
 })
 const handOver = computed(() => handState.value.winner !== undefined)
+
+const dealerCounts = computed(() => {
+  const { dealerCounts, dealerCards } = handState.value
+  if (dealerCounts === undefined && dealerCards[0] !== undefined) {
+    const face = dealerCards[0].face
+    const [points] = cardFaceSettings[face]
+    return `${points} + X`
+  }
+  return handState.value.dealerCounts
+})
 </script>
 <template>
   <div class="container">
     <section class="area shadow-11">
-      <div class="header">Dealer</div>
+      <div class="header">
+        Dealer
+        <span class="points"
+          >(
+          {{ dealerCounts }}
+          points )</span
+        >
+      </div>
       <ul class="cardsList">
         <the-card
           v-for="(card, index) in handState.dealerCards"

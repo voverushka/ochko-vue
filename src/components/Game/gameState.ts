@@ -7,6 +7,8 @@ import { dealerLimit, winningPoints } from '@/shared/presets'
 export const getInitialState = (): GameState => {
   const initialGameState: GameState = {
     winner: undefined,
+    playerCounts: 0,
+    dealerCounts: undefined,
     dealerCards: [],
     playerCards: [],
     deck: deck.getInitialDeck()
@@ -17,12 +19,13 @@ export const getInitialState = (): GameState => {
 export const isBust = (points: number) => points > winningPoints
 
 export const Judge: Record<Command, JudgeFunction> = {
-  deal: (playerCards: Deck): GameResult => {
+  deal: (playerCards: Deck, dealerCards: Deck): GameResult => {
     // TODO: not sure if I implement initial bust case correctly
     const playerCounts = calcPoints(playerCards)
     const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
     return {
       playerCounts,
+      dealerCounts: undefined,
       winner
     }
   },
@@ -32,24 +35,26 @@ export const Judge: Record<Command, JudgeFunction> = {
     const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
     return {
       playerCounts,
+      dealerCounts: undefined,
       winner
     }
   },
 
   stand: (playerCards: Deck, dealerCards: Deck): GameResult => {
-    const dealerPoints = calcPoints(dealerCards)
+    const dealerCounts = calcPoints(dealerCards)
     const playerCounts = calcPoints(playerCards)
 
-    const winner: Winner = isBust(dealerPoints)
+    const winner: Winner = isBust(dealerCounts)
       ? 'player'
-      : playerCounts === dealerPoints
+      : playerCounts === dealerCounts
         ? 'draw'
-        : winningPoints - playerCounts < winningPoints - dealerPoints
+        : winningPoints - playerCounts < winningPoints - dealerCounts
           ? 'player'
           : 'dealer'
 
     return {
       playerCounts,
+      dealerCounts,
       winner
     }
   }
@@ -107,6 +112,7 @@ export const useHandState = () => {
       const { winner, playerCounts } = Judge[command](newState.playerCards, newState.dealerCards)
       if (winner !== undefined && newState.dealerCards.length > 1 /* sanity */) {
         newState.dealerCards[1].closed = false
+        newState.dealerCounts = newState.dealerCounts ?? calcPoints(newState.dealerCards)
       }
       newState = Object.assign(newState, { winner, playerCounts })
     }

@@ -35,9 +35,10 @@ export type GameState = {
   playerCards: Deck
   dealerCards: Deck
   winner: Winner | undefined
-}
+} & GameResult
 
 export type GameResult = {
   playerCounts: number
+  dealerCounts: number | undefined
   winner: Winner | undefined
 }
