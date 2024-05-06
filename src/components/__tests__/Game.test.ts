@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, vi, afterAll } from 'vitest'
+import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest'
 import { mount } from '@vue/test-utils'
 import TheGame from '../Game/TheGame.vue'
 import TheCard from '../TheCard.vue'
@@ -6,7 +6,7 @@ import { cards } from './mocks/mockData'
 import { messages } from '@/shared/presets'
 
 describe('TheGame', () => {
-  beforeAll(() => {
+  beforeEach(() => {
     vi.mock('../../shared/utils', async (importOriginal) => {
       const mod = await importOriginal<typeof import('../../shared/utils')>()
       return {
@@ -25,7 +25,7 @@ describe('TheGame', () => {
       }
     })
   })
-  afterAll(() => {
+  afterEach(() => {
     vi.clearAllMocks()
   })
   it('initial deal - 2 cards each, one dealers card is closed', async () => {
@@ -92,7 +92,7 @@ describe('TheGame', () => {
     expect(dialogHTML).not.toContain(messages['player'])
     expect(dialogHTML).not.toContain(messages['draw'])
   })
-  it('player stands, no winner, cancel', async () => {
+  it('player stands, dealer has to hit, game canceled', async () => {
     const wrapper = mount(TheGame)
     await wrapper.vm.$forceUpdate()
 
@@ -115,7 +115,6 @@ describe('TheGame', () => {
     const dealerClosedCards = dealerArea?.findAll('.closedCard')
     expect(dealerClosedCards).toHaveLength(0)
 
-    // player hits, and has 2 cards
     const playerArea = areas.at(1)
     const playerOpenCards = playerArea?.findAll('.card')
     expect(playerOpenCards).toHaveLength(2)
@@ -131,7 +130,7 @@ describe('TheGame', () => {
     const dialogButtons = dialog.findAll('q-btn')
     expect(dialogButtons).toHaveLength(2)
 
-    expect(dialog.html()).toContain(messages['dealer'])
+    expect(await dialog.html()).toContain(messages['dealer'])
 
     const cancel = dialogButtons.at(0)
 

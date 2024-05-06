@@ -20,14 +20,16 @@ const {
 
 describe('Judge tests', () => {
   test('deal - player in BUST', () => {
-    const runRulesResult = Judge['deal'](
+    const runRulesResult = Judge(
+      'deal',
       [diamondAce, heartAce], // player cards
       [clubAce, spadesAce]
     )
     expect(runRulesResult).toEqual({ winner: 'dealer', playerCounts: 22, dealerCounts: undefined })
   }),
     test('player HIT, winner undefined', () => {
-      const runRulesResult = Judge['hit'](
+      const runRulesResult = Judge(
+        'hit',
         [diamondAce, clubs4, clubsFive], // player cards
         [clubAce, spadesAce]
       )
@@ -38,7 +40,8 @@ describe('Judge tests', () => {
       })
     }),
     test('player HITS and BUSTS', () => {
-      const runRulesResult = Judge['hit'](
+      const runRulesResult = Judge(
+        'hit',
         [heartAce, spadesJack, clubsFive], //player cards
         [diamondAce, clubsJack]
       )
@@ -49,7 +52,8 @@ describe('Judge tests', () => {
       })
     }),
     test('dealer BUSTS, player WINS', () => {
-      const runRulesResult = Judge['stand'](
+      const runRulesResult = Judge(
+        'stand',
         // player cards
         [heartAce, clubsFive, diamondTwo],
         [diamondAce, clubs4, clubsJack]
@@ -61,7 +65,8 @@ describe('Judge tests', () => {
       })
     }),
     test('dealer HITS after STAND, dealer WINS', () => {
-      const runRulesResult = Judge['stand'](
+      const runRulesResult = Judge(
+        'stand',
         [clubs10, clubsFive, diamondTwo],
         [diamondAce, clubs4, heartsFive]
       )
@@ -72,7 +77,8 @@ describe('Judge tests', () => {
       })
     }),
     test('dealer HITS after STAND, a DRAW', () => {
-      const runRulesResult = Judge['stand'](
+      const runRulesResult = Judge(
+        'stand',
         [heartAce, clubsFive, diamondTwo],
         [clubAce, heartsFive, heartsTwo]
       )
@@ -83,7 +89,8 @@ describe('Judge tests', () => {
       })
     }),
     test('dealer HITS after STAND, player WINS', () => {
-      const runRulesResult = Judge['stand'](
+      const runRulesResult = Judge(
+        'stand',
         [diamondAce, clubsFive, diamondTwo],
         [spadesAce, clubs4, heartsTwo]
       )
@@ -94,7 +101,7 @@ describe('Judge tests', () => {
       })
     })
   test('player STANDS at initial deal, a DRAW', () => {
-    const runRulesResult = Judge['stand']([spadesAce, clubs10], [spadesAce, clubs10])
+    const runRulesResult = Judge('stand', [spadesAce, clubs10], [spadesAce, clubs10])
     expect(runRulesResult).toEqual({
       winner: 'draw',
       playerCounts: 21,

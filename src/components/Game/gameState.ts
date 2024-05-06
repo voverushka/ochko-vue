@@ -18,45 +18,50 @@ export const getInitialState = (): GameState => {
 
 export const isBust = (points: number) => points > winningPoints
 
-export const Judge: Record<Command, JudgeFunction> = {
-  deal: (playerCards: Deck, dealerCards: Deck): GameResult => {
-    // TODO: not sure if I implement initial bust case correctly
-    const playerCounts = calcPoints(playerCards)
-    const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
-    return {
-      playerCounts,
-      dealerCounts: undefined,
-      winner
+export const Judge = (
+  command: Command,
+  playerCards: Deck,
+  dealerCards: Deck
+): GameResult | undefined => {
+  switch (command) {
+    case 'deal': {
+      const playerCounts = calcPoints(playerCards)
+      const winner = isBust(playerCounts) ? 'dealer' : undefined
+      return {
+        playerCounts,
+        dealerCounts: undefined,
+        winner
+      }
     }
-  },
-
-  hit: (playerCards: Deck): GameResult => {
-    const playerCounts = calcPoints(playerCards)
-    const winner = isBust(calcPoints(playerCards)) ? 'dealer' : undefined
-    return {
-      playerCounts,
-      dealerCounts: undefined,
-      winner
+    case 'hit': {
+      const playerCounts = calcPoints(playerCards)
+      const winner = isBust(playerCounts) ? 'dealer' : undefined
+      return {
+        playerCounts,
+        dealerCounts: undefined,
+        winner
+      }
     }
-  },
+    case 'stand': {
+      const dealerCounts = calcPoints(dealerCards)
+      const playerCounts = calcPoints(playerCards)
 
-  stand: (playerCards: Deck, dealerCards: Deck): GameResult => {
-    const dealerCounts = calcPoints(dealerCards)
-    const playerCounts = calcPoints(playerCards)
+      const winner: Winner = isBust(dealerCounts)
+        ? 'player'
+        : playerCounts === dealerCounts
+          ? 'draw'
+          : winningPoints - playerCounts < winningPoints - dealerCounts
+            ? 'player'
+            : 'dealer'
 
-    const winner: Winner = isBust(dealerCounts)
-      ? 'player'
-      : playerCounts === dealerCounts
-        ? 'draw'
-        : winningPoints - playerCounts < winningPoints - dealerCounts
-          ? 'player'
-          : 'dealer'
-
-    return {
-      playerCounts,
-      dealerCounts,
-      winner
+      return {
+        playerCounts,
+        dealerCounts,
+        winner
+      }
     }
+    default:
+      undefined
   }
 }
 
@@ -80,7 +85,11 @@ export const Dealer = {
     newState.deck = [...state.deck]
     newState.playerCards = [...state.playerCards]
     const cardOut = newState.deck.pop()
-    cardOut && newState.playerCards.push(cardOut)
+    if (cardOut) {
+      newState.playerCards.push(cardOut)
+    } else {
+      console.error('No cards remaining in the deck.') // unrealistic case
+    }
     return newState
   },
   stand: (state: GameState) => {
@@ -97,7 +106,11 @@ export const Dealer = {
     }
     if (calcPoints(newState.dealerCards) <= dealerLimit) {
       const cardOut = newState.deck.pop()
-      cardOut && newState.dealerCards.push(cardOut)
+      if (cardOut) {
+        newState.dealerCards.push(cardOut)
+      } else {
+        console.error('No cards remaining in the deck.') // unrealistic case
+      }
     }
     return newState
   }
@@ -108,8 +121,10 @@ export const useHandState = () => {
 
   function issueCommand(command: Command) {
     let newState: GameState = Dealer[command](handState.value)
-    if (command in Judge) {
-      const { winner, playerCounts } = Judge[command](newState.playerCards, newState.dealerCards)
+
+    const justdgeResult = Judge(command, newState.playerCards, newState.dealerCards)
+    if (justdgeResult !== undefined) {
+      const { winner, playerCounts } = justdgeResult
       if (winner !== undefined && newState.dealerCards.length > 1 /* sanity */) {
         newState.dealerCards[1].closed = false
         newState.dealerCounts = newState.dealerCounts ?? calcPoints(newState.dealerCards)
